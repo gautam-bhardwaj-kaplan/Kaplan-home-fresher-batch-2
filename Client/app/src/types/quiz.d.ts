@@ -3,5 +3,6 @@ export interface Quiz {
   title: string;
   description: string;
   duration: number;
+  total_marks: number;
   isActive: boolean;
 }

@@ -41,7 +41,7 @@ const Instructions: React.FC = () => {
   }, [quizId, history]);
 
   const handleStartQuiz = () => {
-    if (quiz?.is_active !== 1) {
+    if (!quiz?.isActive) {
       alert("This quiz is not active yet!");
       return;
     }
