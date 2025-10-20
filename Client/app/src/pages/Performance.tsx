@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { 
-    Box, Typography, Paper, CircularProgress, Grid, List, 
-    ListItem, ListItemText, Divider, ListItemIcon
+    Box, Typography, Paper, CircularProgress, List, 
+    ListItem, ListItemText, Divider, ListItemIcon,
+    Grid
 } from "@mui/material";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -15,7 +16,18 @@ const ScorePieChart: React.FC<{ title: string; score: number; totalMarks: number
         { name: 'Missed', value: totalMarks - score, color: '#978f8fff' },
     ];
 
-    const CustomTooltip = ({ active, payload }: any) => {
+    interface TooltipProps {
+        active?: boolean;
+        payload?: Array<{
+            payload: {
+                name: string;
+                value: number;
+                color: string;
+            };
+        }>;
+    }
+
+    const CustomTooltip: React.FC<TooltipProps> = ({ active, payload }) => {
         if (active && payload && payload.length) {
             const dataItem = payload[0].payload;
             return (
@@ -111,17 +123,24 @@ const Performance: React.FC = () => {
             <Typography variant="h5" className="performance-title">Performance Overview</Typography>
 
             <Typography variant="h6" className="performance-subtitle">Recent Scores</Typography>
-            <Grid container spacing={3}>
-                {recentQuizzes.map((quiz, index) => (
-                    <Grid item xs={12} sm={6} md={3} key={index}>
-                        <ScorePieChart 
-                            title={quiz.quizTitle} 
-                            score={quiz.score} 
-                            totalMarks={quiz.totalMarks} 
-                        />
-                    </Grid>
-                ))}
-            </Grid>
+            <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ 
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                    gap: 3,
+                    width: '100%'
+                }}>
+                    {recentQuizzes.map((quiz, index) => (
+                        <Box key={index} sx={{ width: '100%' }}>
+                            <ScorePieChart 
+                                title={quiz.quizTitle} 
+                                score={quiz.score} 
+                                totalMarks={quiz.totalMarks} 
+                            />
+                        </Box>
+                    ))}
+                </Box>
+            </Box>
 
             <Typography variant="h6" className="performance-subtitle">All Attended Quizzes</Typography>
             <Paper className="attended-quiz-list">

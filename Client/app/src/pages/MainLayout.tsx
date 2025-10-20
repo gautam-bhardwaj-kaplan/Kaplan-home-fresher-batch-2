@@ -1,5 +1,3 @@
-// File: src/components/MainLayout.tsx
-
 import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import api from "../api/axiosConfig";
@@ -13,8 +11,6 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import KaplanLogoSource from "../assets/images/kaplan logo.png";
-
-// Import CSS file
 import './styles/MainLayout.css'; 
 
 interface MainLayoutProps {

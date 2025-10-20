@@ -5,7 +5,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Snackbar, Alert } from "@mui/material";
 import "./styles/Register.css";
 
-// Password strength constants
 const PASSWORD_STRENGTH = {
   STRONG: "Strong",
   MEDIUM: "Medium",

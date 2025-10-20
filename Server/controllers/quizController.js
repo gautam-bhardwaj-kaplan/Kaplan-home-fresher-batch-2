@@ -9,7 +9,7 @@ const register = async (req, res) => {
 
     const [existingUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
-      return res.status(409).json({ message: 'Email already registered' }); // Conflict
+      return res.status(409).json({ message: 'Email already registered' }); 
     }
 
     const hashed = await bcrypt.hash(password, 10);
@@ -44,7 +44,7 @@ const login = async (req, res) => {
     if (!valid)
       return res.status(401).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: results[0].id }, 'secret', { expiresIn: '1h' });
+    const token = jwt.sign({ id: results[0].id },  process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
     console.error('Login error:', err);

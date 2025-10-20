@@ -2,7 +2,7 @@ const pool = require('../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Register
+
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -18,7 +18,7 @@ const register = async (req, res) => {
   }
 };
 
-// Login
+
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -30,14 +30,14 @@ const login = async (req, res) => {
     if (!valid)
       return res.status(401).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user[0].id }, 'secret', { expiresIn: '1h' });
+    const token = jwt.sign({ id: user[0].id },  process.env.JWT_SECRET, { expiresIn: '1h' });
     
-    // Set HTTP-only cookie
+   
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Use secure in production (HTTPS)
+      secure: process.env.NODE_ENV === 'production', 
       sameSite: 'strict',
-      maxAge: 3600000 // 1 hour in milliseconds
+      maxAge: 3600000 
     });
     
     res.json({ message: 'Logged in successfully' });
@@ -47,10 +47,9 @@ const login = async (req, res) => {
   }
 };
 
-// Logout
+
 const logout = (req, res) => {
   try {
-    // Clear the token cookie
     res.clearCookie('token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

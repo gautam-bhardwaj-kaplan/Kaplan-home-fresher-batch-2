@@ -1,85 +1,68 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Typography, CircularProgress } from '@mui/material';
-import "./styles/QuizList.css"; 
-
+import { Container, Box, CircularProgress, Typography } from '@mui/material';
 import type { Quiz } from "../types/quiz";
-import { getAllQuizzes } from "../api/quizzes";
-import api from "../api/axiosConfig";
+import { getAllQuizzes } from "../api/quizzes"; 
 import QuizCard from "../components/QuizCard";
-
+import "../pages/styles/QuizList.css";
 
 const QuizList: React.FC = () => {
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const history = useHistory();
-
-    const handleLogout = async () => {
-        try {
-            await api.post("/auth/logout");
-        } catch (error) {
-            console.error("Logout failed:", error);
-        } finally {
-            history.push("/login");
-        }
-    };
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getAllQuizzes();
-                const mapped = data.map(quiz => ({
-                    ...quiz,
-                    isActive: Boolean(quiz.isActive)
+                const data: Quiz[] = await getAllQuizzes();
+                const mappedQuizzes: Quiz[] = data.map((q) => ({
+                    ...q,
+                    isActive: q.is_active === 1,
                 }));
-                setQuizzes(mapped);
-            } catch (err: any) {
+                setQuizzes(mappedQuizzes);
+            } catch (err: unknown) {
                 console.error("Error fetching quizzes:", err);
-                if (err.message.includes("Unauthorized") || err.response?.status === 401) {
-                    handleLogout();
-                }
             } finally {
-                setIsLoading(false);
+                setIsLoading(false); 
             }
         };
         fetchData();
-    }, [history]);
+    }, []);
 
     return (
-        <div className="quizListContainer">
-            <div className="quizListHeader">
-                <Typography component="h1" className="quizListTitle">
-                    Your Prep Dashboard
-                </Typography>
-                <Typography className="quizListSubTitle">
-                    Ready to test your knowledge? Select a quiz below to begin.
-                </Typography>
-            </div>
+        <Box className="quizListContainer">
+            <Container maxWidth="xl" className="quizListContent">
 
-            {isLoading ? (
-                <div className="loadingContainer">
-                    <CircularProgress size={24} className="loadingSpinner" />
-                    <span className="loadingText">Loading Quizzes...</span>
-                </div>
-            ) : quizzes.length === 0 ? (
-                <div className="emptyContainer">
-                    <Typography variant="h6" gutterBottom>
-                        No quizzes are currently available for your account.
+                {/* Intro Section */}
+                <Box className="quizListHeader">
+                    <Typography variant="h4" className="quizListTitle">
+                        Your Prep Dashboard
                     </Typography>
-                    <Typography>
-                        Please check your course enrollment or try again later.
+                    <Typography variant="body1" className="quizListSubTitle">
+                        Ready to test your knowledge? Select a quiz below to begin.
                     </Typography>
-                </div>
-            ) : (
-                <div className="quizCardsWrapper">
-                    {quizzes.map((quiz) => (
-                        <div key={quiz.id} className="quizCardWrapper">
-                            <QuizCard quiz={quiz} />
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+                </Box>
+
+                {/* Loading / Empty / Quiz Cards */}
+                {isLoading ? (
+                    <Box className="loadingContainer">
+                        <CircularProgress size={24} className="loadingSpinner" />
+                        <Typography className="loadingText">Loading Quizzes...</Typography>
+                    </Box>
+                ) : quizzes.length === 0 ? (
+                    <Box className="emptyContainer">
+                        <Typography variant="h6" gutterBottom>No quizzes are currently available for your account.</Typography>
+                        <Typography>Please check your course enrollment or try again later.</Typography>
+                    </Box>
+                ) : (
+                    <Box className="quizCardsWrapper">
+                        {quizzes.map((quiz) => (
+                            <Box key={quiz.id} className="quizCardWrapper">
+                                <QuizCard quiz={quiz} startButtonColor="#2B1871" /> 
+                            </Box>
+                        ))}
+                    </Box>
+                )}
+            </Container>
+        </Box>
     );
 };
 

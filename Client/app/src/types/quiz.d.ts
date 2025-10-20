@@ -7,9 +7,3 @@ export interface Quiz {
   isActive: boolean;
 }
 
-export interface QuizResult {
-  quizTitle: string;
-  score: number;
-  totalMarks: number;
-  submitted_at: string;
-}
