@@ -2,6 +2,8 @@ import React from "react";
 import type { Quiz } from "../types/quiz";
 import { Card, CardContent, Typography, Button, Chip, Box } from "@mui/material";
 import { useHistory } from "react-router-dom"; 
+import "../pages/styles/QuizCard.css";
+
 
 interface QuizCardProps {
   quiz: Quiz;
@@ -19,32 +21,16 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }) => {
   };
 
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        maxWidth: 345,
-        m: 1,
-        borderRadius: 2,
-        boxShadow: 3,
-        transition: "0.3s",
-        display: "flex",
-        flexDirection: "column", 
-        height: "100%", 
-        "&:hover": {
-          boxShadow: 6,
-          transform: "translateY(-4px)",
-        },
-      }}
-    >
-      <CardContent sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-        <Typography variant="h6" component="div" gutterBottom>
+    <Card className="quiz-card">
+      <CardContent className="quiz-card-content">
+        <Typography variant="h6" component="div" gutterBottom className="quiz-card-title">
           {quiz.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom sx={{ flexGrow: 1 }}>
+        <Typography variant="body2" color="text.secondary" gutterBottom className="quiz-card-description">
           {quiz.description}
         </Typography>
 
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Box className="quiz-card-footer">
           <Typography variant="caption" color="text.secondary">
             Duration: {quiz.duration} mins
           </Typography>
@@ -61,6 +47,7 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }) => {
           fullWidth
           disabled={!quiz.isActive}
           onClick={handleStart}
+          className="quiz-card-button"
         >
           Start Quiz
         </Button>

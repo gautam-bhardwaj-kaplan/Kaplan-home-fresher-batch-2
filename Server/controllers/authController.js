@@ -31,11 +31,38 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user[0].id }, 'secret', { expiresIn: '1h' });
-    res.json({ token });
+    
+    // Set HTTP-only cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Use secure in production (HTTPS)
+      sameSite: 'strict',
+      maxAge: 3600000 // 1 hour in milliseconds
+    });
+    
+    res.json({ message: 'Logged in successfully' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-module.exports = { register, login };
+// Logout
+const logout = (req, res) => {
+  try {
+    // Clear the token cookie
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/'
+    });
+    
+    res.json({ success: true, message: 'Logged out successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error during logout' });
+  }
+};
+
+module.exports = { register, login, logout };

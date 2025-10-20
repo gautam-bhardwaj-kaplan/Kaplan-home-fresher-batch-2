@@ -1,0 +1,110 @@
+.registerContainer {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f3f7;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+.registerCard {
+  background-color: white;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1),
+              0 0 0 1px rgba(0,0,0,0.05);
+  width: 420px;
+  max-width: 95%;
+  text-align: center;
+}
+
+.registerTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2B1871;
+  margin-bottom: 30px;
+}
+
+.inputContainer {
+  position: relative;
+  margin-bottom: 20px;
+  min-height: 70px; 
+}
+
+.input {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #dce0e6;
+  font-size: 16px;
+  line-height: 1.5; 
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #2B1871;
+  outline: none;
+}
+
+.togglePassword {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%); 
+  cursor: pointer;
+  color: #6e7781;
+  z-index: 2;
+}
+
+.passwordStrength {
+  font-size: 14px;
+  margin-top: 5px;
+  min-height: 18px; 
+}
+
+.button {
+  width: 100%;
+  padding: 14px;
+  background-color: #2B1871;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #1f115c;
+}
+
+.errorText {
+  color: #d9534f;
+  background-color: #feeaeb;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d9534f;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: left;
+  min-height: 18px; 
+}
+
+.linkText {
+  margin-top: 25px;
+  font-size: 15px;
+  color: #6e7781;
+}
+
+.linkStyle {
+  color: #ff7f47;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.snackbarAlert {
+  width: 100% !important;
+}
+

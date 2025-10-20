@@ -1,0 +1,111 @@
+.dashboard-root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #F5F7FA, #E6EAF0);
+  padding: 40px;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.dashboard-header-icon {
+  font-size: 42px;
+  color: #2B1871;
+}
+.dashboard-header-title {
+  font-weight: 700;
+  color: #2B1871;
+}
+.dashboard-header-subtitle {
+  color: #6e6e6e;
+}
+
+.dashboard-overview-title {
+  font-weight: 600;
+  color: #2B1871;
+  margin-bottom: 32px;
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.stat-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.card-wrapper {
+  flex: 1 1 250px;
+}
+
+.stat-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-radius: 16px;
+  background-color: #fff;
+  height: 180px;
+  transition: all 0.3s ease;
+}
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+.stat-card-icon {
+  font-size: 42px;
+  align-self: flex-end;
+  opacity: 0.8;
+}
+.stat-card-title {
+  font-weight: 600;
+  color: #2B1871;
+  margin-bottom: 8px !important;
+  margin-top: 4px !important;
+}
+.stat-card-value {
+  font-weight: 700;
+  margin-top: -15px !important;
+}
+.stat-card-subtitle {
+  color: #6e6e6e;
+  margin-top: 6px !important;
+}
+
+
+.dashboard-footer {
+  margin-top: 48px;
+  text-align: center;
+}
+
+.loading-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  flex-direction: column;
+}
+
+.loading-spinner {
+  color: #2B1871; 
+  margin-bottom: 16px; 
+}
+
+.progress-rate-spinner {
+  color: #FF7F47; 
+  font-size: 42px; 
+}
+
+.border-top-2B1871 { border-top: 5px solid #2B1871; }
+.border-top-4CAF50 { border-top: 5px solid #4CAF50; }
+.border-top-F44336 { border-top: 5px solid #F44336; }
+.border-top-FF7F47 { border-top: 5px solid #FF7F47; }
+
+.color-2B1871 { color: #2B1871; }
+.color-4CAF50 { color: #4CAF50; }
+.color-F44336 { color: #F44336; }
+.color-FF7F47 { color: #FF7F47; }
+
+.stat-card-icon-inner { font-size: 52px !important;}
