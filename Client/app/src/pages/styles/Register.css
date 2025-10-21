@@ -108,3 +108,8 @@
   width: 100% !important;
 }
 
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+}
+

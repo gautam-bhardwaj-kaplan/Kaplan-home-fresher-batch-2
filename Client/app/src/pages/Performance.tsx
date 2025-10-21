@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { 
     Box, Typography, Paper, CircularProgress, List, 
-    ListItem, ListItemText, Divider, ListItemIcon,
-    Grid
-} from "@mui/material";
+    ListItem, ListItemText, Divider, ListItemIcon} from "@mui/material";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { fetchPerformanceData, type QuizResult } from "../api/statsApi";

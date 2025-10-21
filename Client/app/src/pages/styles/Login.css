@@ -9,69 +9,56 @@
 
 .mainContainer {
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
   font-family: var(--font-family);
   background-color: #f0f3f7;
 }
 
-.imagePanel {
-  flex: 1;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: top left; 
-  display: flex;
-  align-items: flex-start; 
-  justify-content: flex-start; 
-  padding: 20px; 
-}
-
 .loginPanel {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  padding: 30px;
   box-sizing: border-box;
 }
 
 .card {
   background-color: white;
-  padding: 40px 50px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
+  padding: 60px 70px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15),
               0 0 0 1px rgba(0, 0, 0, 0.05);
-  width: 400px;
-  max-width: 90%;
+  width: 100%;
+  max-width: 100%;
   text-align: center;
   box-sizing: border-box;
 }
 
 .loginTitle {
-  font-size: 28px;
+  font-size: 36px;
   font-weight: 700;
   color: var(--primary-color);
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .inputContainer {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .input {
   width: 100%;
-  padding: 12px 40px 12px 15px;
-  border-radius: 8px;
+  padding: 16px 45px 16px 15px;
+  border-radius: 10px;
   border: 1px solid #dce0e6;
-  font-size: 16px;
+  font-size: 18px;
   box-sizing: border-box;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .eyeIcon {
   position: absolute;
-  right: 12px;
+  right: 15px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -80,35 +67,33 @@
 
 .button {
   width: 100%;
-  padding: 14px;
+  padding: 18px;
   background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 600;
-  transition: background-color 0.3s ease;
 }
 
 .button:hover {
   background-color: var(--primary-hover);
 }
 
-
 .errorText {
   color: var(--error-color);
   margin-bottom: 20px;
   background-color: var(--error-bg);
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   border: 1px solid var(--error-color);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .linkText {
   margin-top: 25px;
-  font-size: 15px;
+  font-size: 16px;
   color: #6e7781;
 }
 
@@ -118,51 +103,25 @@
   font-weight: 600;
 }
 
-
-@media (max-width: 1024px) {
-  .mainContainer {
-    flex-direction: row; 
-  }
-
-  .imagePanel {
-    flex: 0.5; 
-  }
-
-  .loginPanel {
-    flex: 1; 
-  }
-
-  .card {
-    width: 90%;
-    padding: 30px 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .imagePanel {
-    flex: 0.4; 
-  }
-}
-
 @media (max-width: 480px) {
   .card {
     width: 95%;
-    padding: 25px 15px;
+    padding: 40px 25px;
   }
 
   .loginTitle {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 28px;
+    margin-bottom: 25px;
   }
 
   .input {
-    font-size: 15px;
-    padding: 10px 35px 10px 12px;
+    font-size: 16px;
+    padding: 14px 35px 14px 12px;
   }
 
   .button {
-    font-size: 16px;
-    padding: 12px;
+    font-size: 17px;
+    padding: 14px;
   }
 
   .linkText {

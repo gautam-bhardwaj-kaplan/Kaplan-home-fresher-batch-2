@@ -130,7 +130,6 @@
     color: var(--red);
 }
 
-/* Divider styling */
 .attended-quiz-item + .divider {
     margin: 0.2rem 0;
     background-color: #e0e0e0;

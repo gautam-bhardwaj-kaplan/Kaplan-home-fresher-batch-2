@@ -9,6 +9,7 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 40px;
+  flex-wrap: wrap; 
 }
 .dashboard-header-icon {
   font-size: 42px;
@@ -74,7 +75,6 @@
   margin-top: 6px !important;
 }
 
-
 .dashboard-footer {
   margin-top: 48px;
   text-align: center;
@@ -109,3 +109,28 @@
 .color-FF7F47 { color: #FF7F47; }
 
 .stat-card-icon-inner { font-size: 52px !important;}
+
+@media (max-width: 1024px) {
+  .dashboard-root { padding: 30px; }
+  .dashboard-header { gap: 12px; }
+  .stat-cards-container { gap: 16px; }
+}
+
+@media (max-width: 768px) {
+  .dashboard-root { padding: 20px; }
+  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .stat-cards-container { flex-direction: column; gap: 20px; }
+  .card-wrapper { flex: 1 1 100%; }
+  .stat-card { height: auto; padding: 20px; }
+}
+
+@media (max-width: 480px) {
+  .dashboard-root { padding: 15px; }
+  .dashboard-header-icon { font-size: 36px; }
+  .dashboard-header-title { font-size: 22px; }
+  .dashboard-header-subtitle { font-size: 14px; }
+  .dashboard-overview-title { font-size: 18px; margin-bottom: 24px; }
+  .stat-card { padding: 16px; height: auto; }
+  .stat-card-icon-inner { font-size: 48px !important; }
+  .progress-rate-spinner { font-size: 36px; }
+}

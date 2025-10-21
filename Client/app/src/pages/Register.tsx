@@ -4,6 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Snackbar, Alert } from "@mui/material";
 import "./styles/Register.css";
+import api from "../api/axiosConfig";
 
 const PASSWORD_STRENGTH = {
   STRONG: "Strong",
@@ -94,9 +95,8 @@ const Register: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        { name, email, password }
+      const res = await api.post(
+        "/auth/register",{ name, email, password }
       );
 
       if (res.status === 201 || res.data.message === "User registered successfully") {
@@ -153,30 +153,30 @@ const Register: React.FC = () => {
           </div>
 
           <div className="inputContainer">
-            <input
+         <div className="passwordWrapper">
+          <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={password}
               onChange={handlePasswordChange}
               className="input"
-            />
-            <span
-              className="togglePassword"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
+           />
+         <span
+           className="togglePassword"
+           onClick={() => setShowPassword(!showPassword)}
+         >
+      {showPassword ? <FaEyeSlash /> : <FaEye />}
+    </span>
+  </div>
 
-            {passwordStrength && (
-              <p
-                className="passwordStrength"
-                style={{ color: getPasswordColor() }}
-              >
-                Password Strength: {passwordStrength}
-              </p>
-            )}
-            {passwordError && <p className="errorText">{passwordError}</p>}
-          </div>
+       {passwordStrength && (
+        <p className="passwordStrength" style={{ color: getPasswordColor() }}>
+          Password Strength: {passwordStrength}
+       </p>
+  )}
+  {passwordError && <p className="errorText">{passwordError}</p>}
+</div>
+
 
           <button type="submit" className="button" disabled={isLoading}>
             {isLoading ? "CREATING ACCOUNT..." : "Register"}

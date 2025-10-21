@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import api from "../api/axiosConfig";
-import { Container, Typography, Box, Button, CircularProgress, Paper } from "@mui/material";
+import { 
+  Container, Typography, Button, CircularProgress, Paper 
+} from "@mui/material";
 import type { Quiz } from "../types/quiz";
 import "./styles/Instructions.css";
 
@@ -33,11 +35,7 @@ const Instructions: React.FC = () => {
   }, [quizId, history]);
 
   const handleStartQuiz = () => {
-    if (!quiz?.isActive) {
-      alert("This quiz is not active yet!");
-      return;
-    }
-    history.push(`/quiz/${quizId}`);
+    window.location.href = `http://localhost:5000/quiz/${quizId}`;
   };
 
   if (loading)
@@ -57,7 +55,10 @@ const Instructions: React.FC = () => {
           <Typography variant="h5" color="error" gutterBottom>
             {error}
           </Typography>
-          <Button onClick={() => history.push("/quizzes")} variant="outlined" className="back-button">
+          <Button 
+            onClick={() => history.push("/quizzes")} 
+            variant="outlined"
+          >
             Go Back to Quizzes
           </Button>
         </Container>
@@ -77,7 +78,7 @@ const Instructions: React.FC = () => {
     <div className="instructions-page">
       <Container maxWidth="md" className="instructions-container">
         <Typography variant="h3" component="h1" align="center" className="quiz-title">
-          {quiz.title}
+          {quiz?.title ?? "Untitled Quiz"}
         </Typography>
 
         <Paper elevation={4} className="instructions-card">
@@ -87,25 +88,17 @@ const Instructions: React.FC = () => {
 
           <div className="info-box">
             <div className="info-item">
-              <Typography variant="h6" className="info-label">
-                Duration
-              </Typography>
-              <Typography variant="h4" className="info-value">
-                {quiz.duration}m
-              </Typography>
+              <Typography variant="h6" className="info-label">Duration</Typography>
+              <Typography variant="h4" className="info-value">{quiz?.duration ? `${quiz.duration}m` : "N/A"}</Typography>
             </div>
             <div className="info-item">
-              <Typography variant="h6" className="info-label">
-                Total Marks
-              </Typography>
-              <Typography variant="h4" className="info-value">
-                {quiz.total_marks}
-              </Typography>
+              <Typography variant="h6" className="info-label">Total Marks</Typography>
+              <Typography variant="h4" className="info-value">{quiz?.total_marks ?? "N/A"}</Typography>
             </div>
           </div>
 
           <Typography variant="body1" className="quiz-description">
-            {quiz.description || "No specific description provided."}
+            {quiz?.description || "No specific description provided."}
           </Typography>
 
           <ul className="instructions-list">
@@ -119,7 +112,12 @@ const Instructions: React.FC = () => {
           </ul>
 
           <div className="start-button-container">
-            <Button onClick={handleStartQuiz} variant="contained" size="large" className="start-button">
+            <Button 
+              onClick={handleStartQuiz} 
+              variant="contained" 
+              size="large" 
+              className="start-button"
+            >
               Start Quiz
             </Button>
           </div>
