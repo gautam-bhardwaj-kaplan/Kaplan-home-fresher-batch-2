@@ -1,0 +1,93 @@
+/* src/components/styles/QuestionPalette.module.css */
+.palettePaper {
+  padding: 1.5rem;
+  border-radius: 16px;
+  height: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.legend {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1rem;
+}
+
+.legendTitle {
+  margin-bottom: 1rem !important;
+  text-align: center;
+  font-weight: bold !important;
+  color: #333;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.legendColorBox {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.75rem;
+  border-radius: 50%;
+}
+
+.answeredBox {
+  background-color: #00529b; /* Kaplan Blue */
+}
+
+.markedBox {
+  border: 2px solid #00529b;
+  background-color: #fff;
+}
+
+.unansweredBox {
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.paletteTitle {
+  text-align: center;
+  margin-bottom: 1rem !important;
+  font-weight: bold !important;
+  color: #333;
+}
+
+.questionGrid {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.questionButton {
+  width: 100% !important;
+  min-width: 0 !important;
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1 !important;
+  font-weight: bold !important;
+  border: 1px solid #ccc !important;
+  color: #555 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.questionButton:hover {
+  transform: scale(1.1);
+  background-color: #f0f4f8 !important;
+}
+
+.answered {
+  background-color: #00529b !important;
+  color: white !important;
+  border-color: #00529b !important;
+}
+
+.marked {
+  border: 2.5px solid #00529b !important;
+  background-color: #fff !important;
+  color: #00529b !important;
+}
+
+.current {
+  outline: 3px solid #f57c00;
+  outline-offset: 2px;
+}
