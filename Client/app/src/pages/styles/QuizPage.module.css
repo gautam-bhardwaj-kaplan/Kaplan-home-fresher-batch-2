@@ -1,21 +1,32 @@
-/* src/pages/styles/QuizPage.module.css */
 .gridContainer {
   display: grid;
-  grid-template-columns: 1fr; /* Default to single column for mobile */
+  grid-template-columns: 1fr;
   gap: 2rem;
+  padding: 1rem; 
+  max-width: 1200px;
+  margin: 0 auto; 
 }
 
-/* On medium screens and up, switch to two columns */
 @media (min-width: 900px) {
   .gridContainer {
     grid-template-columns: 2fr 1fr;
+    gap: 3rem;
   }
 }
 
-/* --- Styles from previous version, still needed --- */
-.quizPaper {
-  padding: 1rem 2rem;
+
+.palettePaper {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #fff;
 }
+
+
+.quizPaper {
+  padding: 1.5rem 2.5rem; 
+  border-radius: 8px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -23,6 +34,7 @@
   flex-wrap: wrap;
   gap: 1rem;
 }
+
 .timerBox {
   display: flex;
   align-items: center;
@@ -31,18 +43,25 @@
   padding: 0.5rem 1rem;
   border-radius: 8px;
 }
+
 .timerIcon {
   margin-right: 0.5rem;
 }
+
 .divider {
   margin: 1.5rem 0;
 }
+
 .mainContent {
   margin: 2rem 0;
 }
+
 .questionText {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem; 
+  font-size: 1.25rem; 
+  line-height: 1.5;
 }
+
 .optionLabel {
   padding: 0.75rem;
   border: 1px solid #ddd;
@@ -50,27 +69,36 @@
   margin-bottom: 0.5rem;
   width: 100%;
 }
+
 .optionLabel:hover {
   background-color: #f0f4f8;
 }
+
 .correctAnswer {
   background-color: #e8f5e9;
   border: 2px solid #4caf50;
+  font-weight: bold;
 }
+
 .wrongAnswer {
   background-color: #ffebee;
   border: 2px solid #f44336;
+  font-weight: bold;
 }
+
 .explanationAlert {
   margin-top: 1.5rem;
 }
+
 .footer {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Center items vertically */
-  padding-top: 1rem;
+  align-items: center;
+  padding-top: 1.5rem; 
   border-top: 1px solid #eee;
+  margin-top: 1.5rem; 
 }
+
 .errorMessage {
   display: block;
   text-align: right;

@@ -1,32 +1,40 @@
 const pool = require('../db');
-
 const getStudentStats = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const [attended] = await pool.query(
-      'SELECT COUNT(DISTINCT quiz_id) AS totalQuizzesAttended FROM submissions WHERE user_id = ?',
-      [userId]
-    );
+  try {
+    const userId = req.user.id;
+    const [attendedResult] = await pool.query(
+      'SELECT COUNT(DISTINCT quiz_id) AS totalQuizzesAttended FROM submissions WHERE user_id = ?',
+      [userId]
+    );
 
-    const [active] = await pool.query(
-      'SELECT COUNT(*) AS activeQuizzes FROM quizzes WHERE is_active = 1'
-    );
+    const [totalResult] = await pool.query(
+      'SELECT COUNT(*) AS totalQuizzes FROM quizzes'
+    );
+    const [inactiveResult] = await pool.query(
+      'SELECT COUNT(*) AS inactiveQuizzes FROM user_quiz_status WHERE user_id = ? AND is_active = 0',
+      [userId]
+    );
 
-    const [inactive] = await pool.query(
-      'SELECT COUNT(*) AS inactiveQuizzes FROM quizzes WHERE is_active = 0'
-    );
+    const totalQuizzes = totalResult[0].totalQuizzes || 0;
+    const totalQuizzesAttended = attendedResult[0].totalQuizzesAttended || 0;
+    const inactiveQuizzes = inactiveResult[0].inactiveQuizzes || 0;
+    const activeQuizzes = totalQuizzes - inactiveQuizzes;
 
-    res.json({
-      totalQuizzesAttended: attended[0]?.totalQuizzesAttended || 0,
-      activeQuizzes: active[0]?.activeQuizzes || 0,
-      inactiveQuizzes: inactive[0]?.inactiveQuizzes || 0,
-    });
-  } catch (err) {
-    console.error('Error fetching student stats:', err);
-    res.status(500).json({ message: 'Error fetching student stats' });
-  }
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
+    res.json({
+      totalQuizzesAttended,
+      activeQuizzes,
+      inactiveQuizzes
+    });
+
+  } catch (err) {
+    console.error('Error fetching student stats:', err);
+    res.status(500).json({ message: 'Error fetching student stats' });
+  }
 };
-
 const getPerformanceData = async (req, res) => {
   try {
     const userId = req.user.id;

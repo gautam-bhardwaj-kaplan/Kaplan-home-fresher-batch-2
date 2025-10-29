@@ -1,183 +1,33 @@
-const pool = require("../config/db");
-const OpenAI = require("openai");
-const asyncHandler = require("../middleware/asyncHandler");
-
-const openai = new OpenAI();
-
-const toCamelCase = (obj) => {
-  if (Array.isArray(obj)) return obj.map(v => toCamelCase(v));
-  if (obj !== null && obj.constructor === Object) {
-    return Object.keys(obj).reduce((result, key) => {
-      const camelKey = key.replace(/([-_][a-z])/g, g => g.toUpperCase().replace(/[-_]/, ''));
-      result[camelKey] = toCamelCase(obj[key]);
-      return result;
-    }, {});
-  }
-  return obj;
-};
-
-const getAllQuizzes = asyncHandler(async (req, res) => {
-  const userId = req.query.userId || 4; 
-  const query = `
-    SELECT
-      q.id, q.title, q.description, q.duration,
-      (SELECT s.pass_status
-       FROM submissions s
-       WHERE s.quiz_id = q.id AND s.user_id = ?
-       ORDER BY s.id DESC
-       LIMIT 1) AS passStatus
-    FROM quizzes q;
-    -- Optionally filter by is_active if you only want to show active quizzes
-    -- WHERE q.is_active = 1;
-  `;
-  const [quizzes] = await pool.query(query, [userId]);
-  res.json(toCamelCase(quizzes));
-});
-
-const getQuizById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const [quizResult] = await pool.query("SELECT id, title, description, duration FROM quizzes WHERE id = ?", [id]);
-  if (quizResult.length === 0) {
-    res.status(404);
-    throw new Error("Quiz not found");
-  }
-  const [questionResult] = await pool.query("SELECT id, question_text, type, options, correct_answer FROM questions WHERE quiz_id = ?", [id]);
-  const questions = questionResult.map(q => ({ ...q, options: q.options || [] }));
-  res.json({
-    quiz: toCamelCase(quizResult[0]),
-    questions: toCamelCase(questions),
-  });
-});
-
-const submitQuiz = asyncHandler(async (req, res) => {
-  const { userId, quizId, answers } = req.body;
-  const [questions] = await pool.query("SELECT * FROM questions WHERE quiz_id = ?", [quizId]);
-
-  let score = 0;
-  questions.forEach(q => {
-    if (q.type === "MCQ" && answers[q.id] === q.correct_answer) {
-      score++;
-    }
-  });
-
-  const percentage = (score / questions.length) * 100;
-  const passStatus = percentage >= 75 ? 'pass' : 'fail';
-
-  const submission = { user_id: userId, quiz_id: quizId, score, pass_status: passStatus };
-  const [result] = await pool.query("INSERT INTO submissions SET ?", submission);
-  const submissionId = result.insertId;
-
-  if (passStatus === 'pass') {
-    try {
-      await pool.query("UPDATE quizzes SET is_active = 0 WHERE id = ?", [quizId]);
-      console.log(`Quiz ID ${quizId} marked as inactive due to passing score.`);
-    } catch (updateError) {
-      console.error(`Error updating is_active status for quiz ID ${quizId}:`, updateError.message);
-    }
-  }
-
-  const answerEntries = Object.entries(answers).map(([qId, ans]) => {
-    const question = questions.find(q => q.id == qId);
-    const isCorrect = question && question.correct_answer === ans ? 1 : 0;
-    return [submissionId, qId, ans, isCorrect];
-  });
-  if (answerEntries.length > 0) {
-    await pool.query("INSERT INTO answers (submission_id, question_id, user_answer, is_correct) VALUES ?", [answerEntries]);
-  }
-
-  res.status(201).json({ submissionId, score, passStatus });
-});
-
-const getResults = asyncHandler(async (req, res) => {
-   const { submissionId } = req.params;
-  const query = `
-    SELECT
-      s.quiz_id, qu.title AS quiz_title, s.score, s.pass_status, q.id AS question_id,
-      q.question_text, q.correct_answer, a.user_answer, a.is_correct
-    FROM submissions s
-    JOIN quizzes qu ON s.quiz_id = qu.id
-    JOIN questions q ON qu.id = q.quiz_id
-    LEFT JOIN answers a ON s.id = a.submission_id AND q.id = a.question_id
-    WHERE s.id = ?;`;
-  const [results] = await pool.query(query, [submissionId]);
-  if (results.length === 0) {
-    res.status(404);
-    throw new Error("Result not found.");
-  }
-
-  const questionsWithAI = [];
-  for (const row of results) {
-    let explanation = "AI explanation is not available for this question.";
-    if (row.correct_answer) {
-      try {
-        const prompt = `Question: "${row.question_text}". The correct answer is "${row.correct_answer}". Please provide a brief, simple explanation for why this is the correct answer.`;
-        const aiRes = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: prompt }],
-          max_tokens: 70,
-        });
-        if (aiRes.choices[0].message.content) {
-          explanation = aiRes.choices[0].message.content.trim();
-        }
-      } catch (e) {
-        console.error(`OpenAI Error:`, e.message);
-      }
-    }
-    questionsWithAI.push({ ...row, userAnswer: row.user_answer || null, explanation });
-  }
-
-  const finalResult = {
-    quizId: results[0].quiz_id,
-    quizTitle: results[0].quiz_title,
-    score: results[0].score,
-    totalQuestions: results.length,
-    passStatus: results[0].pass_status,
-    questions: toCamelCase(questionsWithAI),
-  };
-  res.json(finalResult);
-});
-
-
-module.exports = { getAllQuizzes, getQuizById, submitQuiz, getResults };
 const pool = require('../db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-
 const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
     const [existingUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
-      return res.status(409).json({ message: 'Email already registered' }); 
+      return res.status(409).json({ message: 'Email already registered' });
     }
-
     const hashed = await bcrypt.hash(password, 10);
-
     await pool.query(
       'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
       [name, email, hashed]
     );
-
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
     console.error('Error during registration:', err);
-
     if (err.code === 'ER_DUP_ENTRY') {
       return res.status(409).json({ message: 'Email already registered' });
     }
-
     res.status(500).json({ message: 'Server error. Please try again later.' });
   }
 };
-
 
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const [results] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-
     if (results.length === 0)
       return res.status(401).json({ message: 'Invalid credentials' });
 
@@ -185,7 +35,7 @@ const login = async (req, res) => {
     if (!valid)
       return res.status(401).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: results[0].id },  process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: results[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
     console.error('Login error:', err);
@@ -193,10 +43,31 @@ const login = async (req, res) => {
   }
 };
 
-
 const getQuizList = async (req, res) => {
   try {
-    const [results] = await pool.query('SELECT * FROM quizzes');
+    const userId = req.user.id;
+
+    const [results] = await pool.query(
+      `
+      SELECT 
+        q.id, q.title, q.description, q.duration, q.total_marks,
+        -- is_passed: 1 if the user has a "passed" record, 0 otherwise
+        IF(uqs.is_active = 0, 1, 0) AS is_passed,
+        -- is_attempted: 1 if any submission exists for this user, 0 otherwise
+        IF(COUNT(s.id) > 0, 1, 0) AS is_attempted
+      FROM quizzes q
+      -- Join to see if it's in the user's "passed" list
+      LEFT JOIN user_quiz_status uqs 
+        ON q.id = uqs.quiz_id AND uqs.user_id = ?
+      -- Join to see if ANY submission exists for this user
+      LEFT JOIN submissions s 
+        ON q.id = s.quiz_id AND s.user_id = ?
+      -- Group by quiz to count submissions
+      GROUP BY q.id, q.title, q.description, q.duration, q.total_marks, uqs.is_active
+      `,
+      [userId, userId] 
+    );
+
     res.json(results);
   } catch (err) {
     console.error('Error fetching quizzes:', err);
@@ -207,14 +78,140 @@ const getQuizList = async (req, res) => {
 const getQuizById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [results] = await pool.query('SELECT * FROM quizzes WHERE id = ?', [id]);
-    if (results.length === 0)
+    const [quizResults] = await pool.query('SELECT * FROM quizzes WHERE id = ?', [id]);
+
+    if (quizResults.length === 0) {
       return res.status(404).json({ message: 'Quiz not found' });
-    res.json(results[0]);
+    }
+    const quiz = quizResults[0];
+
+    const [questionResults] = await pool.query('SELECT * FROM questions WHERE quiz_id = ?', [id]);
+
+    const questions = questionResults.map(q => {
+      try {
+        return {
+          ...q,
+          options: (typeof q.options === 'string') ? JSON.parse(q.options) : (q.options || [])
+        };
+      } catch (e) {
+        console.error(`Failed to parse options for question ${q.id}:`, q.options);
+        return { ...q, options: [] };
+      }
+    });
+
+    res.json({ quiz: quiz, questions: questions });
   } catch (err) {
     console.error('Error fetching quiz:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-module.exports = { register, login, getQuizList, getQuizById };
+const submitQuiz = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { quizId, answers } = req.body;
+
+    const [questions] = await pool.query('SELECT * FROM questions WHERE quiz_id = ?', [quizId]);
+    const questionsMap = new Map(questions.map(q => [q.id, q]));
+
+    const [result] = await pool.query('INSERT INTO submissions (quiz_id, user_id) VALUES (?, ?)', [quizId, userId]);
+    const submissionId = result.insertId;
+
+    let score = 0;
+    const answerPromises = [];
+
+    for (const [questionIdStr, userAnswer] of Object.entries(answers)) {
+      const questionId = parseInt(questionIdStr, 10);
+      const question = questionsMap.get(questionId);
+      let isCorrect = false;
+
+      if (question) {
+        const questionMarks = parseInt(question.marks) || 1;
+        if (userAnswer === question.correct_answer) {
+          score += questionMarks;
+          isCorrect = true;
+        }
+        answerPromises.push(
+          pool.query(
+            'INSERT INTO answers (submission_id, question_id, user_answer, is_correct, explanation) VALUES (?, ?, ?, ?, ?)',
+            [submissionId, questionId, userAnswer, isCorrect, question.explanation || null]
+          )
+        );
+      }
+    }
+
+    await Promise.all(answerPromises);
+    const totalMarks = questions.reduce((sum, q) => sum + (parseInt(q.marks) || 1), 0);
+    const passStatus = (totalMarks > 0 && (score / totalMarks) >= 0.5) ? 'pass' : 'fail';
+    
+    await pool.query(
+      'UPDATE submissions SET score = ?, pass_status = ? WHERE id = ?',
+      [score, passStatus, submissionId]
+    );
+
+    if (passStatus === 'pass') {
+      await pool.query(
+        `INSERT INTO user_quiz_status (user_id, quiz_id, is_active) VALUES (?, ?, 0)
+         ON DUPLICATE KEY UPDATE is_active = 0`,
+        [userId, quizId]
+      );
+    }
+
+    res.json({ submissionId, score, totalQuestions: questions.length, passStatus });
+  } catch (err) {
+    console.error('Error submitting quiz:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const getResultById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [submissions] = await pool.query(
+      'SELECT s.*, q.title AS quizTitle, q.id AS quizId FROM submissions s JOIN quizzes q ON s.quiz_id = q.id WHERE s.id = ?',
+      [id]
+    );
+
+    if (submissions.length === 0)
+      return res.status(404).json({ message: 'Submission not found' });
+
+    const submission = submissions[0];
+
+    const [answersForReview] = await pool.query(
+      'SELECT * FROM answers WHERE submission_id = ?',
+      [id]
+    );
+    
+    const [questionCount] = await pool.query('SELECT COUNT(*) AS count FROM questions WHERE quiz_id = ?', [submission.quizId]);
+
+    const formattedAnswers = answersForReview.map(ans => ({
+      question_id: ans.question_id,
+      user_answer: ans.user_answer,
+      is_correct: ans.is_correct,
+      explanation: ans.explanation
+    }));
+
+    res.json({
+      submissionId: submission.id,
+      quizId: submission.quizId,
+      quizTitle: submission.quizTitle,
+      score: submission.score,
+      totalQuestions: questionCount[0].count,
+      passStatus: submission.pass_status,
+      answers: formattedAnswers
+    });
+
+  } catch (err) {
+    console.error('Error fetching result:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  getQuizList,
+  getQuizById,
+  submitQuiz,
+  getResultById
+};

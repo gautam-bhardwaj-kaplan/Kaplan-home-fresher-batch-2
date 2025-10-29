@@ -1,4 +1,3 @@
-// src/components/QuestionPalette.tsx
 import React from 'react';
 import { Box, Typography, Paper, Grid, Button } from '@mui/material';
 import styles from './style/QuestionPalette.module.css';
@@ -19,9 +18,9 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
   onQuestionSelect,
 }) => {
   return (
-    <Paper elevation={4} className={styles.palettePaper}>
-      <Box className={styles.legend}>
-        <Typography variant="h6" className={styles.legendTitle}>Legend</Typography>
+    <Paper elevation={4} className={styles.palettePaper}>   
+       <Box className={styles.legend}>
+        <Typography variant="h6" className={styles.legendTitle}>Question Pallete</Typography>
         <Box className={styles.legendItem}>
           <Box className={`${styles.legendColorBox} ${styles.answeredBox}`} />
           <Typography variant="body2">Answered</Typography>
@@ -37,6 +36,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
       </Box>
 
       <Typography variant="h6" className={styles.paletteTitle}>Questions</Typography>
+     
       <Grid container spacing={1.5} className={styles.questionGrid}>
         {Array.from({ length: totalQuestions }, (_, index) => {
           const isAnswered = answeredQuestions.has(index);
@@ -44,18 +44,13 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
           const isCurrent = index === currentQuestionIndex;
 
           let buttonClass = styles.questionButton;
-          if (isMarked) {
-            buttonClass += ` ${styles.marked}`;
-          } else if (isAnswered) {
-            buttonClass += ` ${styles.answered}`;
-          }
-          if (isCurrent) {
-            buttonClass += ` ${styles.current}`;
-          }
+          if (isMarked) { buttonClass += ` ${styles.marked}`; }
+          else if (isAnswered) { buttonClass += ` ${styles.answered}`; }
+          if (isCurrent) { buttonClass += ` ${styles.current}`; }
 
-          // This is the corrected return statement
           return (
-            <Grid item xs={3} key={index}>
+            
+            <Grid xs={3} key={index}> 
               <Button
                 variant="outlined"
                 className={buttonClass}

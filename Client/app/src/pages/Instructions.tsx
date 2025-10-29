@@ -19,7 +19,7 @@ const Instructions: React.FC = () => {
     const fetchQuizDetails = async () => {
       try {
         const response = await api.get(`/quizzes/${quizId}`);
-        setQuiz(response.data);
+        setQuiz(response.data.quiz);
       } catch (err: any) {
         console.error("Error fetching quiz:", err);
         if (err.response && err.response.status === 401) {
@@ -35,8 +35,10 @@ const Instructions: React.FC = () => {
   }, [quizId, history]);
 
   const handleStartQuiz = () => {
-    window.location.href = `http://localhost:5000/quiz/${quizId}`;
-  };
+  if (quizId) {   
+    history.push(`/quiz/${quizId}`);
+  }
+};
 
   if (loading)
     return (
@@ -104,7 +106,7 @@ const Instructions: React.FC = () => {
           <ul className="instructions-list">
             <li>Read all questions carefully before answering.</li>
             <li>Each question must be answered before submission.</li>
-            <li>Once submitted, you cannot retake the quiz.</li>
+            <li>Each Question Carries <b>1</b> mark.</li>
             <li>Ensure a stable internet connection during the quiz.</li>
             <li>Do not refresh or close the browser once the quiz begins.</li>
             <li>The timer starts automatically when you begin the quiz.</li>

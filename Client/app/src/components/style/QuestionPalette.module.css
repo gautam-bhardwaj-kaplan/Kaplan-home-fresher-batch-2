@@ -1,4 +1,3 @@
-/* src/components/styles/QuestionPalette.module.css */
 .palettePaper {
   padding: 1.5rem;
   border-radius: 16px;
@@ -34,7 +33,7 @@
 }
 
 .answeredBox {
-  background-color: #00529b; /* Kaplan Blue */
+  background-color: #00529b; 
 }
 
 .markedBox {

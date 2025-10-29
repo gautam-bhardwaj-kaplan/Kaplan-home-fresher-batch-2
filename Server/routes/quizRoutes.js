@@ -1,24 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const {
-  getAllQuizzes,
-  getQuizById,
-  submitQuiz,
-  getResults
-} = require('../controllers/quizController');
 
-router.get('/quizzes', getAllQuizzes);
-router.get('/quizzes/:id', getQuizById); 
-router.post('/quizzes/submit', submitQuiz); 
-router.get('/results/:submissionId', getResults);
-
-
-module.exports = router;
 const authenticateToken = require('../middleware/authMiddleware');
-const { getQuizList, getQuizById } = require('../controllers/quizController');
+const { getQuizList, getQuizById, submitQuiz, getResultById, getStudentStats } = require('../controllers/quizController');
 
 
 router.get('/', authenticateToken, getQuizList);
 router.get('/:id', authenticateToken, getQuizById);
-
+router.post('/submit', authenticateToken, submitQuiz);
+router.get('/results/:id', authenticateToken, getResultById);
 module.exports = router;

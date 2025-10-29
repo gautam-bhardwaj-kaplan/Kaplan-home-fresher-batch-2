@@ -1,20 +1,33 @@
+export interface Question {
+  id: number;
+  quizId: number;
+  questionText: string;
+  type: 'MCQ' | 'subjective'; 
+  options: string[];
+  correctAnswer: string;
+}
 
 export interface Quiz {
   id: number;
   title: string;
   description: string;
   duration: number;
-  passStatus?: 'pass' | 'fail' | null; 
+  total_marks?: number;
+
+  // Backend fields (from DB)
+  is_active?: number;
+  is_attempted?: number;
+  is_passed?: number;
+
+  // Derived frontend-friendly flags
+  isActive: boolean;
+  isAttempted?: boolean;
+  isPassed?: boolean;
+
+  passStatus?: 'pass' | 'fail' | null;
 }
 
-export interface Question {
-  id: number;
-  questionText: string;
-  text: string;
-  options: string[];
-  correctAnswer: string;
-  explanation?: string;
-}
+
 
 export interface QuizDetails {
   quiz: Quiz;
@@ -22,21 +35,26 @@ export interface QuizDetails {
 }
 
 export interface QuizSubmission {
-  quizId: string;
-  answers: Record<number, string>;
+  quizId: number;
   userId: number;
+  answers: Record<number, string>; 
 }
 
 export interface QuizSubmissionResponse {
   submissionId: number;
   score: number;
   passStatus: 'pass' | 'fail';
+  totalQuestions: number; 
 }
 
-export interface AnswerReview extends Question {
+export interface AnswerReview {
   questionId: number;
-  userAnswer: string | null;
-  isCorrect: boolean;
+  questionText: string;
+  userAnswer: string | null; 
+  correctAnswer: string;
+  isCorrect: number; 
+  explanation?: string;
+  type?: 'MCQ' | 'subjective';
 }
 
 export interface ResultData {
@@ -48,3 +66,12 @@ export interface ResultData {
   questions: AnswerReview[];
 }
 
+// Add export
+export interface CompletedSubmission {
+  submissionId: number;
+  quizId: number;
+  quizTitle: string;
+  score: number;
+  totalQuestions: number;
+  submittedAt: string;
+}

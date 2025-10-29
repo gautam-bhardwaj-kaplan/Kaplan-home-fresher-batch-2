@@ -21,6 +21,7 @@ import QuizIcon from "@mui/icons-material/FormatListBulleted";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Avatar from "@mui/material/Avatar";
 import KaplanLogoSource from "../assets/images/kaplan logo.png";
 import "./styles/MainLayout.css";
 
@@ -30,9 +31,20 @@ interface MainLayoutProps {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [userInitial, setUserInitial] = useState('U');
   const history = useHistory();
   const location = useLocation();
   const currentPath = location.pathname;
+
+  React.useEffect(() => {
+    const userName = localStorage.getItem('userName') || 'User';
+    const initials = userName
+      .split(' ')
+      .map(name => name[0])
+      .join('')
+      .toUpperCase();
+    setUserInitial(initials[0] || 'U');
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -86,14 +98,22 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </Typography>
           </Box>
 
-          <Button
-            color="inherit"
-            onClick={handleLogout}
-            endIcon={<LogoutIcon />}
-            className="logout-button"
-          >
-            Logout
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Avatar 
+              src={`https://api.dicebear.com/8.x/initials/svg?seed=${userInitial}`}
+              sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}
+            >
+              {userInitial}
+            </Avatar>
+            <Button
+              color="inherit"
+              onClick={handleLogout}
+              endIcon={<LogoutIcon />}
+              className="logout-button"
+            >
+              Logout
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
 

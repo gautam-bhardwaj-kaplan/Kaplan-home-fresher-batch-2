@@ -1,17 +1,14 @@
 import React from "react";
 import type { Quiz } from "../types/quiz";
 import { Card, CardContent, Typography, Button, Chip, Box } from "@mui/material";
-import { useHistory } from "react-router-dom"; 
+import { useHistory } from "react-router-dom";
 import "../pages/styles/QuizCard.css";
-
-
 interface QuizCardProps {
   quiz: Quiz;
+  isAttempted: boolean;
 }
-
-const QuizCard: React.FC<QuizCardProps> = ({ quiz }) => {
+const QuizCard: React.FC<QuizCardProps> = ({ quiz , isAttempted}) => {
   const history = useHistory();
-
   const handleStart = () => {
     if (quiz.isActive) {
       history.push(`/instructions/${quiz.id}`);
@@ -19,7 +16,7 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }) => {
       alert("This quiz is not active yet!");
     }
   };
-
+  const buttonText = quiz.isActive && isAttempted ? "Retake Quiz" : "Start Quiz";
   return (
     <Card className="quiz-card">
       <CardContent className="quiz-card-content">
@@ -29,7 +26,6 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }) => {
         <Typography variant="body2" color="text.secondary" gutterBottom className="quiz-card-description">
           {quiz.description}
         </Typography>
-
         <Box className="quiz-card-footer">
           <Typography variant="caption" color="text.secondary">
             Duration: {quiz.duration} mins
@@ -40,7 +36,6 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }) => {
             size="small"
           />
         </Box>
-
         <Button
           variant="contained"
           color="primary"
@@ -49,11 +44,10 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz }) => {
           onClick={handleStart}
           className="quiz-card-button"
         >
-          Start Quiz
+          {buttonText}
         </Button>
       </CardContent>
     </Card>
   );
 };
-
 export default QuizCard;
