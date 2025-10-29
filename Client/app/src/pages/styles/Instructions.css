@@ -1,0 +1,126 @@
+:root {
+  --dark-blue: #2b1871;
+  --accent-gold: #ffc82e;
+  --light-bg: #f9f9fb;
+}
+
+.instructions-page {
+  min-height: 100vh;
+  background-color: var(--light-bg);
+  font-family: "Roboto", sans-serif;
+}
+
+.loading-container,
+.error-container,
+.notfound-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--light-bg);
+  text-align: center;
+}
+
+.loading-spinner {
+  color: var(--dark-blue);
+}
+
+.loading-text {
+  margin-left: 10px;
+  color: var(--dark-blue);
+}
+
+.error-content {
+  padding: 2rem 0;
+}
+
+.back-button {
+  color: var(--dark-blue) !important;
+  border-color: var(--dark-blue) !important;
+  margin-top: 10px !important;
+}
+
+.quiz-title {
+  margin-bottom: 30px !important;
+  font-weight: 600 !important;
+  color: var(--dark-blue) !important;
+  border-bottom: 2px solid var(--accent-gold);
+  padding-bottom: 8px;
+}
+
+.instructions-card {
+  padding: 2rem !important;
+  border-radius: 12px !important;
+  background-color: #fff;
+}
+
+.instructions-header {
+  color: var(--dark-blue);
+  margin-bottom: 1.5rem !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+}
+
+.accent-bar {
+  color: var(--accent-gold);
+  margin-right: 8px;
+}
+
+.info-box {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: var(--light-bg);
+  border: 1px solid #e0e0e0;
+}
+
+.info-item {
+  text-align: center;
+}
+
+.info-label {
+  color: var(--dark-blue);
+}
+
+.info-value {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.quiz-description {
+  color: #555;
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+}
+
+.instructions-list {
+  line-height: 1.8;
+  font-size: 16px;
+  color: #333;
+  margin-left: 0;
+  padding-left: 1.5rem;
+}
+
+.start-button-container {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+.start-button {
+  background-color: var(--dark-blue) !important;
+  color: #fff !important;
+  padding: 12px 40px !important;
+  border-radius: 8px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.start-button:hover {
+  background-color: #1f115c !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+}

@@ -1,80 +1,99 @@
-// src/pages/QuizList.tsx
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getQuizzes } from "../api/quizApi";
+import React, { useEffect, useState, useMemo } from "react"; // IMPORT useMemo
+import { useLocation } from "react-router-dom"; // IMPORT useLocation
+import { Container, Box, CircularProgress, Typography } from '@mui/material';
 import type { Quiz } from "../types/quiz";
-import LoadingSpinner from '../components/LoadingSpinner';
-import ErrorAlert from '../components/ErrorAlert';
-import styles from './styles/QuizList.module.css';
+import { getAllQuizzes } from "../api/quizzes"; 
+import QuizCard from "../components/QuizCard";
+import "../pages/styles/QuizList.css";
 
-import { Box, Typography, Paper, Button } from '@mui/material';
+const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+};
 
 const QuizList: React.FC = () => {
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+    const query = useQuery(); 
+    const filterStatus = query.get("status"); 
 
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const data = await getQuizzes(1); 
-        setQuizzes(data);
-      } catch (err) {
-        console.error("Error fetching quizzes:", err);
-        setError("Failed to fetch quizzes.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchQuizzes();
-  }, []);
+    const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  if (loading) return <LoadingSpinner text="Loading Quizzes..." />;
-  if (error) return <ErrorAlert message={error} />;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data: Quiz[] = await getAllQuizzes();
+                const mappedQuizzes: Quiz[] = data.map((q) => ({
+                    ...q,
+                    isActive: q.is_active === 1,
+                }));
+                setQuizzes(mappedQuizzes);
+            } catch (err: unknown) {
+                console.error("Error fetching quizzes:", err);
+            } finally {
+                setIsLoading(false); 
+            }
+        };
+        fetchData();
+    }, []);
 
-  return (
-    <Paper elevation={4} className={styles.quizListPaper}>
-      <Typography variant="h4" component="h1" className={styles.title}>
-        Available Quizzes
-      </Typography>
-      {quizzes.length > 0 ? (
-        quizzes.map((quiz) => {
-          const hasPassed = quiz.passStatus === 'pass';
-          const hasFailed = quiz.passStatus === 'fail';
-          let buttonText = 'Start Quiz';
-          if (hasPassed) {
-            buttonText = 'Completed';
-          } else if (hasFailed) {
-            buttonText = 'Retake Quiz';
-          }
 
-          return (
-            <Box key={quiz.id} className={styles.listItem}>
-              {quiz.passStatus && (
-                <div className={`${styles.statusBadge} ${hasPassed ? styles.passBadge : styles.failBadge}`}>
-                  {hasPassed ? 'Passed' : 'Failed'}
-                </div>
-              )}
-              <Typography variant="h6">{quiz.title}</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ my: 1 }}>{quiz.description}</Typography>
-              <Button
-                variant="contained"
-                onClick={() => navigate(`/quiz/${quiz.id}`)}
-                disabled={hasPassed} 
-              >
-                {buttonText} 
-              </Button>
-            </Box>
-          );
-        })
-      ) : (
-        <Typography align="center" color="text.secondary" sx={{ mt: 3 }}>
-          No quizzes are available at the moment.
-        </Typography>
-      )}
-    </Paper>
-  );
+    const filteredQuizzes = useMemo(() => {
+        if (!filterStatus) {
+            return quizzes; 
+        }
+
+        if (filterStatus === 'active') {
+            return quizzes.filter(q => q.isActive);
+        }
+
+        if (filterStatus === 'inactive') {
+            return quizzes.filter(q => !q.isActive);
+        }
+
+        return quizzes; 
+    }, [quizzes, filterStatus]);
+    
+    const listTitle = useMemo(() => {
+        if (filterStatus === 'active') return 'Active Quizzes';
+        if (filterStatus === 'inactive') return 'Completed Quizzes';
+        return 'All Available Quizzes';
+    }, [filterStatus]);
+
+
+    return (
+        <Box className="quizListContainer">
+            <Container maxWidth="xl" className="quizListContent">
+
+                <Box className="quizListHeader">
+                    <Typography variant="h4" className="quizListTitle">
+                        {listTitle} 
+                    </Typography>
+                    <Typography variant="body1" className="quizListSubTitle">
+                        {filterStatus ? 'Viewing filtered list' : 'Ready to test your knowledge? Select a quiz below to begin.'}
+                    </Typography>
+                </Box>
+
+                {isLoading ? (
+                    <Box className="loadingContainer">
+                        <CircularProgress size={24} className="loadingSpinner" />
+                        <Typography className="loadingText">Loading Quizzes...</Typography>
+                    </Box>
+                ) : filteredQuizzes.length === 0 ? ( 
+                    <Box className="emptyContainer">
+                        <Typography variant="h6" gutterBottom>No {filterStatus} quizzes found.</Typography>
+                        <Typography>Please check your course enrollment or try again later.</Typography>
+                    </Box>
+                ) : (
+                    <Box className="quizCardsWrapper">
+                        {filteredQuizzes.map((quiz) => ( 
+                            <Box key={quiz.id} className="quizCardWrapper">
+                                <QuizCard quiz={quiz} startButtonColor="#2B1871" /> 
+                            </Box>
+                        ))}
+                    </Box>
+                )}
+            </Container>
+        </Box>
+    );
 };
 
 export default QuizList;

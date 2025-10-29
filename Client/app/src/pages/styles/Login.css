@@ -1,0 +1,130 @@
+:root {
+  --primary-color: #2b1871;
+  --primary-hover: #1f115c;
+  --error-color: #d9534f;
+  --error-bg: #feeaeb;
+  --link-color: #ff7f47;
+  --font-family: "Roboto", Arial, sans-serif;
+}
+
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: var(--font-family);
+  background-color: #f0f3f7;
+}
+
+.loginPanel {
+  width: 100%;
+  max-width: 500px;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.card {
+  background-color: white;
+  padding: 60px 70px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15),
+              0 0 0 1px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.loginTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 40px;
+}
+
+.inputContainer {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.input {
+  width: 100%;
+  padding: 16px 45px 16px 15px;
+  border-radius: 10px;
+  border: 1px solid #dce0e6;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6e7781;
+}
+
+.button {
+  width: 100%;
+  padding: 18px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.button:hover {
+  background-color: var(--primary-hover);
+}
+
+.errorText {
+  color: var(--error-color);
+  margin-bottom: 20px;
+  background-color: var(--error-bg);
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--error-color);
+  font-size: 15px;
+}
+
+.linkText {
+  margin-top: 25px;
+  font-size: 16px;
+  color: #6e7781;
+}
+
+.linkStyle {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 95%;
+    padding: 40px 25px;
+  }
+
+  .loginTitle {
+    font-size: 28px;
+    margin-bottom: 25px;
+  }
+
+  .input {
+    font-size: 16px;
+    padding: 14px 35px 14px 12px;
+  }
+
+  .button {
+    font-size: 17px;
+    padding: 14px;
+  }
+
+  .linkText {
+    font-size: 14px;
+  }
+}

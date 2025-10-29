@@ -14,3 +14,11 @@ router.get('/results/:submissionId', getResults);
 
 
 module.exports = router;
+const authenticateToken = require('../middleware/authMiddleware');
+const { getQuizList, getQuizById } = require('../controllers/quizController');
+
+
+router.get('/', authenticateToken, getQuizList);
+router.get('/:id', authenticateToken, getQuizById);
+
+module.exports = router;
