@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Paper, Grid, Button } from '@mui/material';
 import styles from './style/QuestionPalette.module.css';
+import clsx from 'clsx';
 
 interface QuestionPaletteProps {
   totalQuestions: number;
@@ -20,7 +21,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
   return (
     <Paper elevation={4} className={styles.palettePaper}>   
        <Box className={styles.legend}>
-        <Typography variant="h6" className={styles.legendTitle}>Question Pallete</Typography>
+        <Typography variant="h6" className={styles.legendTitle}>Question Palette</Typography>
         <Box className={styles.legendItem}>
           <Box className={`${styles.legendColorBox} ${styles.answeredBox}`} />
           <Typography variant="body2">Answered</Typography>
@@ -43,14 +44,18 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
           const isMarked = markedForReview.has(index);
           const isCurrent = index === currentQuestionIndex;
 
-          let buttonClass = styles.questionButton;
-          if (isMarked) { buttonClass += ` ${styles.marked}`; }
-          else if (isAnswered) { buttonClass += ` ${styles.answered}`; }
-          if (isCurrent) { buttonClass += ` ${styles.current}`; }
+          const buttonClass = clsx(
+            styles.questionButton,
+            {
+              [styles.marked]: isMarked,
+              [styles.answered]: isAnswered && !isMarked,
+              [styles.current]: isCurrent
+          }
+        );
 
           return (
             
-            <Grid xs={3} key={index}> 
+            <Grid key={index}> 
               <Button
                 variant="outlined"
                 className={buttonClass}

@@ -1,10 +1,10 @@
 export interface Question {
   id: number;
   quizId: number;
-  questionText: string;
+  question_text: string;
   type: 'MCQ' | 'subjective'; 
   options: string[];
-  correctAnswer: string;
+  correct_answer: string;
 }
 
 export interface Quiz {
@@ -48,16 +48,17 @@ export interface QuizSubmissionResponse {
 }
 
 export interface AnswerReview {
-  questionId: number;
+  question_id: number;
   questionText: string;
-  userAnswer: string | null; 
+  user_answer: string | null; 
   correctAnswer: string;
-  isCorrect: number; 
+  is_correct: number; 
   explanation?: string;
   type?: 'MCQ' | 'subjective';
 }
 
 export interface ResultData {
+  answers: AnswerReview[];
   quizId: number;
   quizTitle: string;
   score: number;

@@ -12,8 +12,6 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz , isAttempted}) => {
   const handleStart = () => {
     if (quiz.isActive) {
       history.push(`/instructions/${quiz.id}`);
-    } else {
-      alert("This quiz is not active yet!");
     }
   };
   const buttonText = quiz.isActive && isAttempted ? "Retake Quiz" : "Start Quiz";

@@ -80,7 +80,7 @@ const QuizPage: React.FC = () => {
     if (!isReviewMode && !loading && questions.length > 0) {
       window.history.pushState(null, '', window.location.href); 
       
-      const handlePopState = (event: PopStateEvent) => {
+      const handlePopState = () => {
         window.history.pushState(null, '', window.location.href);
         alert("You cannot go back while the quiz is in progress. Please submit your answers.");
       };

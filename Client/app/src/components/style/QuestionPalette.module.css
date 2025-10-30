@@ -33,11 +33,11 @@
 }
 
 .answeredBox {
-  background-color: #00529b; 
+  background-color: #4CAF50; 
 }
 
 .markedBox {
-  border: 2px solid #00529b;
+  border: 2px solid #4CAF50;
   background-color: #fff;
 }
 
@@ -75,15 +75,15 @@
 }
 
 .answered {
-  background-color: #00529b !important;
+  background-color: #4CAF50 !important;
   color: white !important;
-  border-color: #00529b !important;
+  border-color: #4CAF50 !important;
 }
 
 .marked {
-  border: 2.5px solid #00529b !important;
+  border: 2.5px solid #4CAF50 !important;
   background-color: #fff !important;
-  color: #00529b !important;
+  color: #4CAF50!important;
 }
 
 .current {
