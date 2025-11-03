@@ -18,7 +18,10 @@ const Login: React.FC = () => {
     setIsLoading(true);
     try {
       const res = await api.post("/auth/login", { email, password });
-      if (res.status === 200) history.push("/");
+      if (res.status === 200) {
+        localStorage.setItem('userName', res.data.user?.name || email.split('@')[0]);
+        history.push("/");
+      }
     } catch (err: any) {
       if (err.response && err.response.status === 401) {
         setError(err.response.data.message || "Invalid email or password.");

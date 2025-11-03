@@ -38,7 +38,7 @@ app.use((req, res) => {
 const startServer = async () => {
   try {
     await pool.query('SELECT 1'); 
-    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+    app.listen(PORT);
   } catch (err) {
     console.error('DB connection failed', err);
     process.exit(1);

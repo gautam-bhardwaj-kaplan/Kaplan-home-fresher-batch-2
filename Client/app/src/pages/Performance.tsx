@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { 
-    Box, Typography, Paper, CircularProgress, List, 
-    ListItem, ListItemText, Divider, ListItemIcon} from "@mui/material";
+import { Box, Typography, Paper, CircularProgress, List, ListItem, ListItemText, Divider, ListItemIcon} from "@mui/material";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { fetchPerformanceData, type QuizResult } from "../api/statsApi";
@@ -79,6 +77,7 @@ const Performance: React.FC = () => {
     const [performanceData, setPerformanceData] = useState<QuizResult[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [overrideQuiz, setOverrideQuiz] = useState<QuizResult | null>(null);
 
     useEffect(() => {
         const loadPerformance = async () => {
@@ -94,6 +93,10 @@ const Performance: React.FC = () => {
         };
         loadPerformance();
     }, []);
+
+    const handleQuizClick = (quiz: QuizResult) => {
+        setOverrideQuiz(quiz);
+    };
 
     if (isLoading) {
         return (
@@ -114,7 +117,16 @@ const Performance: React.FC = () => {
             </Box>
         );
 
-    const recentQuizzes = performanceData.slice(0, 4);
+    let recentQuizzes = performanceData.slice(0, 4);
+
+    if (overrideQuiz) {
+        const isAlreadyFirst = recentQuizzes.length > 0 && recentQuizzes[0] === overrideQuiz;
+        
+        if (!isAlreadyFirst) {
+            recentQuizzes = [overrideQuiz, ...recentQuizzes.slice(1)];
+        }
+    }
+
 
     return (
         <Box className="performance-container">
@@ -145,7 +157,11 @@ const Performance: React.FC = () => {
                 <List>
                     {performanceData.map((quiz, index) => (
                         <React.Fragment key={index}>
-                            <ListItem className="attended-quiz-item">
+                            <ListItem 
+                                className="attended-quiz-item" 
+                                onClick={() => handleQuizClick(quiz)} 
+                                sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' } }}
+                            >
                                 <ListItemIcon className="list-item-icon"> 
                                     <CheckCircleOutlineIcon />
                                 </ListItemIcon>

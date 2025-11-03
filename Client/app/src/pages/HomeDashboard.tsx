@@ -95,7 +95,7 @@ const HomeDashboard: React.FC = () => {
         <SchoolIcon className="dashboard-header-icon" />
         <Box>
           <Typography variant="h4" className="dashboard-header-title">Student Dashboard</Typography>
-          <Typography className="dashboard-header-subtitle">Welcome back! Here’s your quick learning summary.</Typography>
+          <Typography className="dashboard-header-subtitle">Welcome back! Here's your quick learning summary.</Typography>
         </Box>
       </Box>
 

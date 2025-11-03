@@ -1,0 +1,55 @@
+.resultPaper {
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  text-align: center;
+  background-color: #ffffff; 
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: 2rem auto; 
+}
+
+.divider {
+  margin: 1.5rem 0 !important;
+  border-color: rgba(0, 82, 155, 0.2); 
+}
+
+.scoreText {
+  font-size: 4rem !important; 
+  font-weight: bold !important;
+  line-height: 1 !important;
+  margin: 0.5rem 0 !important;
+  color: #00529b; 
+}
+
+.percentageText {
+  font-size: 1.5rem !important;
+  font-weight: bold;
+  color: #555; 
+  margin-bottom: 1.5rem !important;
+}
+
+.statusText {
+  font-size: 1.2rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.passText {
+  color: #4caf50;
+}
+
+.failText {
+  color: #f44336; 
+}
+
+.buttonContainer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.loadingReviewText {
+  display: block;
+  margin-top: 1rem;
+}

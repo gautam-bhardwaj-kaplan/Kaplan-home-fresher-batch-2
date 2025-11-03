@@ -41,9 +41,7 @@
     color: white !important;
 }
 
-.logout-button {
-    
-}
+
 
 .logout-button:hover {
     background-color: rgba(255, 255, 255, 0.1);
